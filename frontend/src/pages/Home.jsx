@@ -29,7 +29,7 @@ const Home = () => {
   const fetchRoasts = async (query = '') => {
     setIsFetchingInitial(true);
     try {
-      const endpoint = user ? `${API_URL}/api/roasts/me` : `${API_URL}/api/roasts/guests`;
+      const endpoint = user ? `${API_URL}/api/roasts/me` : `${API_URL}/api/roasts`;
       const response = await axios.get(endpoint, { params: { search: query } });
       setRoasts(response.data);
     } catch (err) {
@@ -190,7 +190,7 @@ const Home = () => {
               ) : (
                 <>
                   <Globe className="w-6 h-6 text-gray-600" />
-                  Global Guest Roasts
+                  Global Recent Feed
                 </>
               )}
             </h2>

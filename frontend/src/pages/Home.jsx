@@ -4,6 +4,7 @@ import { Flame, AlertCircle, Zap, Shield, Globe, Loader2 } from 'lucide-react';
 import RoastForm from '../components/RoastForm';
 import RoastCard from '../components/RoastCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import RoastProgress from '../components/RoastProgress';
 import { AuthContext } from '../context/AuthContext';
 
 const Home = () => {
@@ -20,15 +21,9 @@ const Home = () => {
   }, [user]);
 
   const fetchRoasts = async () => {
-    if (!user) {
-      setRoasts([]);
-      setIsFetchingInitial(false);
-      return;
-    }
-    
     setIsFetchingInitial(true);
     try {
-      const response = await axios.get(`${API_URL}/api/roasts/me`);
+      const response = await axios.get(`${API_URL}/api/roasts`);
       setRoasts(response.data);
     } catch (err) {
       console.error('Failed to fetch roasts:', err);
@@ -204,31 +199,7 @@ const Home = () => {
           ) : roasts.length > 0 || isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {isLoading && (
-                <div className="h-96 glass-panel rounded-xl border border-blue-200 animate-pulse bg-white/50 backdrop-blur-sm relative overflow-hidden flex flex-col">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-10 pointer-events-none"></div>
-                  <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-white/50 relative z-10">
-                    <div>
-                      <div className="h-4 bg-gray-200 rounded w-24 mb-1"></div>
-                      <div className="h-3 bg-gray-200 rounded w-16"></div>
-                    </div>
-                  </div>
-                  <div className="h-40 w-full bg-[#F3F2EF] border-b border-[#E0E0E0] flex items-center justify-center relative z-10">
-                    <div className="flex flex-col items-center justify-center text-blue-500">
-                      <Loader2 className="w-8 h-8 animate-spin mb-2" />
-                      <span className="text-xs font-semibold uppercase tracking-widest">Roasting</span>
-                    </div>
-                  </div>
-                  <div className="p-4 flex-1 flex flex-col relative z-10">
-                    <div className="mb-4">
-                      <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                    </div>
-                    <div className="mt-auto pt-4 border-t border-gray-200 -mx-4 -mb-4 p-4">
-                       <div className="h-4 bg-gray-200 rounded w-16 mb-2"></div>
-                       <div className="h-5 bg-gray-200 rounded w-full"></div>
-                    </div>
-                  </div>
-                </div>
+                <RoastProgress />
               )}
               {roasts.filter(r => !latestRoast || r._id !== latestRoast._id).map((roast, index) => (
                 <div key={roast._id} className="animate-float" style={{ animationDelay: `${index * 0.2}s`, animationDuration: '8s' }}>

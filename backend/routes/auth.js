@@ -12,6 +12,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret123';
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Please provide all required fields' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+    }
     let user = await User.findOne({ email });
 
     if (user) {
@@ -41,6 +48,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Please provide email and password' });
+    }
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -63,6 +74,10 @@ router.post('/login', async (req, res) => {
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Please provide an email address' });
+    }
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -106,6 +121,13 @@ router.post('/forgot-password', async (req, res) => {
 router.post('/reset-password', async (req, res) => {
   try {
     const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ error: 'Please provide all required fields' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+    }
     const user = await User.findOne({
       email,
       resetPasswordExpires: { $gt: Date.now() },

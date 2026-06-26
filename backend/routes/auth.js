@@ -132,4 +132,15 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// Get all users (Admin/Testing)
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Server error while fetching users' });
+  }
+});
+
 module.exports = router;

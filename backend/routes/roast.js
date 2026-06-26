@@ -212,4 +212,16 @@ router.delete('/roasts/me', auth, async (req, res) => {
   }
 });
 
+// Get all users
+router.get('/users', async (req, res) => {
+  try {
+    const User = require('../models/User'); // require it here to avoid circular dependencies if any, or just at the top
+    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users.' });
+  }
+});
+
 module.exports = router;

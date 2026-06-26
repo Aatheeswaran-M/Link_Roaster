@@ -26,14 +26,10 @@ const Home = () => {
   }, [user, searchQuery]);
 
   const fetchRoasts = async (query = '') => {
-    if (!user) {
-      setIsFetchingInitial(false);
-      return;
-    }
-    
     setIsFetchingInitial(true);
     try {
-      const response = await axios.get(`${API_URL}/api/roasts/me`, { params: { search: query } });
+      const endpoint = user ? `${API_URL}/api/roasts/me` : `${API_URL}/api/roasts`;
+      const response = await axios.get(endpoint, { params: { search: query } });
       setRoasts(response.data);
     } catch (err) {
       console.error('Failed to fetch roasts:', err);
@@ -190,8 +186,8 @@ const Home = () => {
                 </>
               ) : (
                 <>
-                  <Flame className="w-6 h-6 text-gray-600" />
-                  Your Roasts (Session Only)
+                  <Globe className="w-6 h-6 text-gray-600" />
+                  Global Recent Feed
                 </>
               )}
             </h2>

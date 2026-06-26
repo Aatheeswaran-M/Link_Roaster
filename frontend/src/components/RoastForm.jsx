@@ -27,10 +27,10 @@ const RoastForm = ({ onSubmit, isLoading }) => {
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder={user ? "Paste any URL to roast..." : "Please sign in to roast a URL"}
+            placeholder="Paste any URL to roast..."
             className="w-full bg-transparent text-[#000000] placeholder-gray-500 focus:outline-none text-base"
             required
-            disabled={isLoading || !user}
+            disabled={isLoading}
           />
         </div>
 
@@ -38,7 +38,7 @@ const RoastForm = ({ onSubmit, isLoading }) => {
           <select 
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            disabled={isLoading || !user}
+            disabled={isLoading}
             className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#0A66C2] focus:border-[#0A66C2] block w-full md:w-36 p-2.5 outline-none cursor-pointer disabled:opacity-50"
           >
             <option value="English">English</option>
@@ -52,7 +52,7 @@ const RoastForm = ({ onSubmit, isLoading }) => {
         
         <button
           type="submit"
-          disabled={isLoading || !url.trim() || !user}
+          disabled={isLoading || !url.trim()}
           className="w-full sm:w-auto px-6 py-2.5 bg-[#0A66C2] hover:bg-[#004182] text-white font-semibold rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isLoading ? (

@@ -75,6 +75,12 @@ const Login = () => {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
+            <Link
+              to="/"
+              className="mt-3 w-full flex justify-center py-3 px-4 border border-[#0A66C2] text-sm font-bold rounded-full text-[#0A66C2] bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2] transition-colors"
+            >
+              Continue as Guest
+            </Link>
           </div>
         </form>
         

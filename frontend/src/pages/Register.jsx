@@ -78,8 +78,14 @@ const Register = () => {
               disabled={loading}
               className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-full text-white bg-[#0A66C2] hover:bg-[#004182] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2] transition-colors disabled:opacity-50"
             >
-              {loading ? 'Joining...' : 'Agree & Join'}
+              {loading ? 'Creating account...' : 'Join now'}
             </button>
+            <Link
+              to="/"
+              className="mt-3 w-full flex justify-center py-3 px-4 border border-[#0A66C2] text-sm font-bold rounded-full text-[#0A66C2] bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2] transition-colors"
+            >
+              Continue as Guest
+            </Link>
           </div>
         </form>
         

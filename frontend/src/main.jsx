@@ -9,7 +9,7 @@ import { Toaster } from 'react-hot-toast'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/linkroaster">
         <App />
         <Toaster position="top-right" />
       </BrowserRouter>

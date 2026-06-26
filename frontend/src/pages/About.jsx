@@ -98,7 +98,7 @@ const About = () => {
         </div>
 
         {/* Bottom CTA / Banner */}
-        <div className="mt-24 max-w-5xl mx-auto glass-panel p-10 md:p-14 rounded-3xl bg-gradient-to-br from-indigo-900 to-[#0A66C2] text-white text-center shadow-2xl relative overflow-hidden group">
+        <div className="mt-24 max-w-5xl mx-auto p-10 md:p-14 rounded-3xl bg-gradient-to-br from-indigo-900 to-[#0A66C2] text-white text-center shadow-2xl relative overflow-hidden group border border-indigo-700">
           {/* Decorative background overlay */}
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
           

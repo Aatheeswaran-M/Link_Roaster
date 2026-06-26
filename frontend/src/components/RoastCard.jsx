@@ -63,12 +63,13 @@ const RoastCard = ({ roast, onDelete, isDeleting }) => {
           </div>
           <div className="flex items-center gap-2">
             {showTranslate ? (
-              <div className="flex items-center gap-1 bg-indigo-50 border border-indigo-100 px-2 py-1 rounded-md">
+              <div className="flex items-center gap-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full shadow-sm">
+                <Globe className="w-4 h-4 text-indigo-600" />
                 <select 
                   value={targetLang}
                   onChange={(e) => setTargetLang(e.target.value)}
                   disabled={isTranslating}
-                  className="bg-transparent text-xs text-indigo-900 font-semibold outline-none cursor-pointer disabled:opacity-50 appearance-none"
+                  className="bg-transparent text-sm text-indigo-900 font-bold outline-none cursor-pointer disabled:opacity-50 appearance-none"
                 >
                   <option value="English">EN</option>
                   <option value="Spanish">ES</option>
@@ -81,19 +82,20 @@ const RoastCard = ({ roast, onDelete, isDeleting }) => {
                 <button 
                   onClick={handleTranslate} 
                   disabled={isTranslating}
-                  className="text-indigo-600 hover:text-indigo-800 disabled:opacity-50 transition-colors flex items-center"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-full text-xs font-bold disabled:opacity-50 transition-colors flex items-center shadow-sm"
                   title="Translate Card"
                 >
-                  {isTranslating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5" />}
+                  {isTranslating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Go'}
                 </button>
               </div>
             ) : (
               <button
                 onClick={() => setShowTranslate(true)}
-                className="text-[#666666] hover:text-[#0A66C2] transition-colors p-1"
-                title="Translate Options"
+                className="flex items-center gap-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-3 py-1.5 rounded-full shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+                title="Translate this roast"
               >
-                <Globe className="w-3.5 h-3.5" />
+                <Globe className="w-4 h-4" />
+                <span className="text-xs font-bold">Translate</span>
               </button>
             )}
             {isOwner && onDelete && (

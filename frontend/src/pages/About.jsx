@@ -55,42 +55,44 @@ const About = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#F3F2EF] py-16 md:py-24">
       {/* Animated Background Blobs */}
-      <div className="absolute top-0 -left-4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob pointer-events-none"></div>
-      <div className="absolute top-0 -right-4 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 pointer-events-none"></div>
-      <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-4000 pointer-events-none"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-gradient-to-br from-blue-400 to-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob pointer-events-none"></div>
+      <div className="absolute top-[20%] right-[-10%] w-[35rem] h-[35rem] bg-gradient-to-bl from-indigo-400 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000 pointer-events-none"></div>
+      <div className="absolute bottom-[-20%] left-[20%] w-[45rem] h-[45rem] bg-gradient-to-tr from-pink-400 to-rose-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 pointer-events-none"></div>
 
       <div className="relative container mx-auto px-4 max-w-7xl z-10">
         
         {/* Header Section */}
-        <div className="text-center mb-20">
-          <div className="inline-block mb-6 px-5 py-2 rounded-full bg-white border border-gray-200 text-[#0A66C2] text-sm font-bold tracking-widest uppercase animate-float-delayed shadow-sm">
+        <div className="text-center mb-24">
+          <div className="inline-block mb-8 px-6 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-white/50 text-[#0A66C2] text-sm font-bold tracking-widest uppercase animate-float-delayed shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-default">
             <span className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-5 h-5 text-blue-500" />
               Inside Link Roaster
             </span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-[#0A66C2] to-indigo-600 mb-6 tracking-tight animate-glow pb-2">
+          <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-blue-700 to-indigo-800 mb-8 tracking-tighter animate-fade-in-up drop-shadow-sm pb-2">
             Professional Grade.<br className="hidden md:block" />
-            <span className="text-[#0A66C2]">Brutally Honest.</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-400">Brutally Honest.</span>
           </h1>
-          <p className="text-[#666666] max-w-3xl mx-auto text-xl md:text-2xl leading-relaxed font-medium">
-            Link Roaster is not just an insult generator. It's a sophisticated AI-powered tool designed to tear down the internet's worst UI/UX, questionable content, and overhyped marketing.
+          <p className="text-gray-600 max-w-4xl mx-auto text-2xl md:text-3xl leading-relaxed font-medium animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            Not just an insult generator. A sophisticated AI-powered tool designed to tear down the internet's worst UI/UX, questionable content, and overhyped marketing.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="glass-panel p-8 rounded-2xl hover:-translate-y-2 hover:shadow-2xl hover:border-blue-200 transition-all duration-300 group bg-white/60 backdrop-blur-md border border-white/50"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="glass-panel p-10 rounded-[2rem] hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-300 transition-all duration-500 group bg-white/70 backdrop-blur-xl border border-white/60 relative overflow-hidden"
+              style={{ animationDelay: `${index * 0.15}s` }}
             >
-              <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-sm ${getColorClasses(feature.color)}`}>
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br from-white/40 to-transparent rounded-full mix-blend-overlay group-hover:scale-150 transition-transform duration-700"></div>
+              
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md ${getColorClasses(feature.color)} relative z-10`}>
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-extrabold mb-3 text-gray-900 tracking-tight">{feature.title}</h3>
-              <p className="text-[#434649] leading-relaxed text-base">{feature.description}</p>
+              <h3 className="text-2xl font-black mb-4 text-gray-900 tracking-tight relative z-10">{feature.title}</h3>
+              <p className="text-gray-600 leading-relaxed text-lg relative z-10 font-medium">{feature.description}</p>
             </div>
           ))}
         </div>

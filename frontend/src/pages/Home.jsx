@@ -5,6 +5,7 @@ import RoastForm from '../components/RoastForm';
 import RoastCard from '../components/RoastCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import RoastProgress from '../components/RoastProgress';
+import WelcomeModal from '../components/WelcomeModal';
 import { AuthContext } from '../context/AuthContext';
 
 const Home = () => {
@@ -116,6 +117,8 @@ const Home = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#F3F2EF]">
+      <WelcomeModal />
+      
       {/* Animated Background Blobs */}
       <div className="absolute top-0 -left-4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob pointer-events-none"></div>
       <div className="absolute top-0 -right-4 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 pointer-events-none"></div>

@@ -163,6 +163,25 @@ router.get('/roasts', async (req, res) => {
   }
 });
 
+router.get('/roasts/guests', async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = { user: null };
+    if (search) {
+      query.$or = [
+        { url: { $regex: search, $options: 'i' } },
+        { title: { $regex: search, $options: 'i' } },
+        { summary: { $regex: search, $options: 'i' } }
+      ];
+    }
+    const roasts = await Roast.find(query).sort({ createdAt: -1 }).limit(20).lean();
+    res.json(roasts);
+  } catch (error) {
+    console.error('Error fetching guest roasts:', error);
+    res.status(500).json({ error: 'Failed to fetch roasts.' });
+  }
+});
+
 router.get('/roasts/me', auth, async (req, res) => {
   try {
     const { search } = req.query;

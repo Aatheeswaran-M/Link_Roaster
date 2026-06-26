@@ -106,7 +106,7 @@ const Home = () => {
           </p>
           
           {/* Glassmorphism wrapper for RoastForm */}
-          <div className="max-w-3xl mx-auto glass-panel p-3 md:p-5 rounded-2xl shadow-xl animate-float transition-all duration-300 hover:shadow-2xl hover:border-blue-200">
+          <div className="max-w-3xl mx-auto glass-panel p-3 md:p-5 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-blue-200">
              <RoastForm onSubmit={handleRoast} isLoading={isLoading} />
           </div>
         </div>

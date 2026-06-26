@@ -27,6 +27,22 @@ const Home = () => {
 
   const fetchRoasts = async (query = '') => {
     if (!user) {
+      // Load guest roasts from localStorage
+      try {
+        const savedGuestRoasts = JSON.parse(localStorage.getItem('guestRoasts') || '[]');
+        if (query) {
+          const lowerQuery = query.toLowerCase();
+          setRoasts(savedGuestRoasts.filter(r => 
+            r.url.toLowerCase().includes(lowerQuery) || 
+            r.title?.toLowerCase().includes(lowerQuery) || 
+            r.summary?.toLowerCase().includes(lowerQuery)
+          ));
+        } else {
+          setRoasts(savedGuestRoasts);
+        }
+      } catch (e) {
+        setRoasts([]);
+      }
       setIsFetchingInitial(false);
       return;
     }
@@ -51,6 +67,14 @@ const Home = () => {
       const newRoast = { ...response.data };
       if (user) {
         newRoast.user = { _id: user._id || user.id, name: user.name };
+      } else {
+        // Save to localStorage for guests
+        try {
+          const currentGuestRoasts = JSON.parse(localStorage.getItem('guestRoasts') || '[]');
+          localStorage.setItem('guestRoasts', JSON.stringify([newRoast, ...currentGuestRoasts]));
+        } catch (e) {
+          console.error('Could not save to localStorage', e);
+        }
       }
       setLatestRoast(newRoast);
       setRoasts((prevRoasts) => [newRoast, ...prevRoasts]);
@@ -72,6 +96,13 @@ const Home = () => {
     try {
       await axios.delete(`${API_URL}/api/roast/${id}`);
       setRoasts((prevRoasts) => prevRoasts.filter(r => r._id !== id));
+      if (!user) {
+        // Also remove from guest localStorage
+        try {
+          const currentGuestRoasts = JSON.parse(localStorage.getItem('guestRoasts') || '[]');
+          localStorage.setItem('guestRoasts', JSON.stringify(currentGuestRoasts.filter(r => r._id !== id)));
+        } catch (e) {}
+      }
       if (latestRoast && latestRoast._id === id) {
         setLatestRoast(null);
       }

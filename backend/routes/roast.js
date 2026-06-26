@@ -200,7 +200,7 @@ router.get('/roasts/me', auth, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch history.' });
   }
 });
-router.post('/translate', auth, async (req, res) => {
+router.post('/translate', async (req, res) => {
   const { targetLanguage, roastContent } = req.body;
   if (!targetLanguage || !roastContent) {
     return res.status(400).json({ error: 'Missing language or content' });

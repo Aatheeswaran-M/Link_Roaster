@@ -32,13 +32,25 @@ app.use('/api/auth', authRoutes);
 app.use('/api', roastRoutes);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
+const connectDB = async () => {
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('Connected to MongoDB');
+    }
+  } catch (err) {
     console.error('MongoDB connection error:', err);
+  }
+};
+
+connectDB();
+
+// Only listen if not running in Vercel (Vercel provides its own port/execution)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
+}
+
+// Export for Vercel serverless functions
+module.exports = app;

@@ -1,0 +1,196 @@
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { Flame, AlertCircle, Zap, Shield, Globe, Loader2 } from 'lucide-react';
+import RoastForm from '../components/RoastForm';
+import RoastCard from '../components/RoastCard';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { AuthContext } from '../context/AuthContext';
+
+const Home = () => {
+  const [roasts, setRoasts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingInitial, setIsFetchingInitial] = useState(true);
+  const [error, setError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const { API_URL, user } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchRoasts();
+  }, [user]);
+
+  const fetchRoasts = async () => {
+    if (!user) {
+      setRoasts([]);
+      setIsFetchingInitial(false);
+      return;
+    }
+    
+    setIsFetchingInitial(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/roasts/me`);
+      setRoasts(response.data);
+    } catch (err) {
+      console.error('Failed to fetch roasts:', err);
+    } finally {
+      setIsFetchingInitial(false);
+    }
+  };
+
+  const handleRoast = async (url, language) => {
+    if (!user) {
+      setError("Please sign in to roast a URL.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(`${API_URL}/api/roast`, { url, language });
+      
+      const newRoast = { ...response.data, user: { _id: user._id || user.id, name: user.name } };
+      setRoasts((prevRoasts) => [newRoast, ...prevRoasts]);
+    } catch (err) {
+      console.error('Error creating roast:', err);
+      if (err.response?.data?.error) {
+        setError(err.response.data.error);
+      } else {
+        setError("Couldn't reach the server. Is it running?");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this roast?")) return;
+    setDeletingId(id);
+    try {
+      await axios.delete(`${API_URL}/api/roast/${id}`);
+      setRoasts((prevRoasts) => prevRoasts.filter(r => r._id !== id));
+    } catch (err) {
+      console.error('Error deleting roast:', err);
+      alert('Failed to delete roast. Please try again.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#F3F2EF]">
+      {/* Animated Background Blobs */}
+      <div className="absolute top-0 -left-4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob pointer-events-none"></div>
+      <div className="absolute top-0 -right-4 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 pointer-events-none"></div>
+      <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-4000 pointer-events-none"></div>
+
+      <div className="relative container mx-auto px-4 max-w-7xl py-12 md:py-20">
+        
+        {/* Hero Section */}
+        <div className="text-center mb-16 relative z-10">
+          <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0A66C2] text-sm font-semibold tracking-wide animate-float-delayed shadow-sm">
+            ✨ AI-Powered Website Analysis
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-[#0A66C2] to-indigo-600 mb-6 tracking-tight animate-glow pb-2">
+            Discover the internet's <br className="hidden md:block" />
+            <span className="text-[#0A66C2]">brutal truths</span>
+          </h1>
+          <p className="text-[#666666] max-w-2xl mx-auto text-xl md:text-2xl leading-relaxed mb-12">
+            Drop a URL to generate a professional, AI-powered roast and uncover the hidden flaws of any website.
+          </p>
+          
+          {/* Glassmorphism wrapper for RoastForm */}
+          <div className="max-w-3xl mx-auto glass-panel p-3 md:p-5 rounded-2xl shadow-xl animate-float transition-all duration-300 hover:shadow-2xl hover:border-blue-200">
+             <RoastForm onSubmit={handleRoast} isLoading={isLoading} />
+          </div>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="max-w-3xl mx-auto mb-8 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700 relative z-10 animate-pulse">
+            <AlertCircle className="w-5 h-5 shrink-0" />
+            <p className="font-medium">{error}</p>
+          </div>
+        )}
+
+        {/* Removed LoadingSpinner since we now use skeleton card */}
+
+
+
+        {/* Feed Section */}
+        <div className="mt-8 relative z-10">
+          <div className="flex items-center justify-between mb-8 border-b border-[#E0E0E0] pb-4">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              {user ? (
+                <>
+                  <Flame className="w-6 h-6 text-[#0A66C2]" />
+                  Your Recent Roasts
+                </>
+              ) : (
+                <>
+                  <Globe className="w-6 h-6 text-gray-600" />
+                  Recent Feed
+                </>
+              )}
+            </h2>
+          </div>
+          
+          {isFetchingInitial ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-pulse">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-96 glass-panel rounded-2xl border border-gray-200"></div>
+              ))}
+            </div>
+          ) : roasts.length > 0 || isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {isLoading && (
+                <div className="h-96 glass-panel rounded-xl border border-blue-200 animate-pulse bg-white/50 backdrop-blur-sm relative overflow-hidden flex flex-col">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-10 pointer-events-none"></div>
+                  <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-white/50 relative z-10">
+                    <div>
+                      <div className="h-4 bg-gray-200 rounded w-24 mb-1"></div>
+                      <div className="h-3 bg-gray-200 rounded w-16"></div>
+                    </div>
+                  </div>
+                  <div className="h-40 w-full bg-[#F3F2EF] border-b border-[#E0E0E0] flex items-center justify-center relative z-10">
+                    <div className="flex flex-col items-center justify-center text-blue-500">
+                      <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                      <span className="text-xs font-semibold uppercase tracking-widest">Roasting</span>
+                    </div>
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col relative z-10">
+                    <div className="mb-4">
+                      <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    <div className="mt-auto pt-4 border-t border-gray-200 -mx-4 -mb-4 p-4">
+                       <div className="h-4 bg-gray-200 rounded w-16 mb-2"></div>
+                       <div className="h-5 bg-gray-200 rounded w-full"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {roasts.map((roast, index) => (
+                <div key={roast._id} className="animate-float" style={{ animationDelay: `${index * 0.2}s`, animationDuration: '8s' }}>
+                  <RoastCard 
+                    roast={roast} 
+                    onDelete={handleDelete}
+                    isDeleting={deletingId === roast._id}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-24 glass-panel rounded-2xl border border-gray-200 border-dashed">
+              <Flame className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-pulse" />
+              <h3 className="text-xl font-bold text-gray-700 mb-2">No roasts yet</h3>
+              <p className="text-gray-500">Sign in to be the first to drop a link and feel the burn.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Home;
+

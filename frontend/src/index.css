@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #0A66C2; /* LinkedIn Blue */
+  --color-accent-hover: #004182;
+  --color-card: #FFFFFF;
+  --color-background: #F3F2EF; /* LinkedIn Off-white */
+  --color-text-main: #000000;
+  --color-text-muted: #666666;
+  --color-border: #E0E0E0;
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[#F3F2EF] text-[#000000] font-sans antialiased selection:bg-[#0A66C2] selection:text-white;
+  }
+}
+
+/* Custom scrollbar for better aesthetics */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F3F2EF;
+}
+::-webkit-scrollbar-thumb {
+  background: #CFCFCF;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0A66C2;
+}
+
+/* Custom Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float-delayed {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+.animate-float-delayed {
+  animation: float-delayed 7s ease-in-out infinite 2s;
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 15px rgba(10, 102, 194, 0.4); }
+  50% { text-shadow: 0 0 25px rgba(10, 102, 194, 0.8), 0 0 10px rgba(10, 102, 194, 0.5); }
+}
+.animate-glow {
+  animation: glow 4s ease-in-out infinite;
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+  animation: blob 7s infinite;
+}
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}

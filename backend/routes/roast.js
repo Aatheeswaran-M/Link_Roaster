@@ -79,18 +79,38 @@ Respond ONLY with valid JSON, no markdown, no explanation.`;
   }
 };
 
-router.post('/roast', auth, async (req, res) => {
+router.post('/roast', async (req, res) => {
   const { url, language } = req.body;
 
   if (!url || !isValidUrl(url)) {
     return res.status(400).json({ error: 'Please provide a valid URL starting with http:// or https://' });
   }
 
+  let authUser = null;
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (token) {
+      const jwt = require('jsonwebtoken');
+      const User = require('../models/User');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
+      authUser = await User.findById(decoded.userId);
+    }
+  } catch (e) {
+    // Ignore token errors for guests
+  }
+
   try {
     // 0. Check for existing roast for this user
-    const existingRoast = await Roast.findOne({ url, user: req.user._id });
-    if (existingRoast) {
-      return res.status(200).json(existingRoast);
+    if (authUser) {
+      const existingRoast = await Roast.findOne({ url, user: authUser._id });
+      if (existingRoast) {
+        return res.status(200).json(existingRoast);
+      }
+    } else {
+      const existingRoast = await Roast.findOne({ url, user: null });
+      if (existingRoast) {
+        return res.status(200).json(existingRoast);
+      }
     }
 
     // 1. Scrape the URL
@@ -102,7 +122,7 @@ router.post('/roast', auth, async (req, res) => {
     // 3. Save to MongoDB
     const newRoast = new Roast({
       url,
-      user: req.user._id,
+      user: authUser ? authUser._id : null,
       title,
       ogImage,
       summary: roastData.summary,

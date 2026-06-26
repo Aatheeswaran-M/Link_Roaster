@@ -23,7 +23,8 @@ const Home = () => {
   const fetchRoasts = async () => {
     setIsFetchingInitial(true);
     try {
-      const response = await axios.get(`${API_URL}/api/roasts`);
+      const endpoint = user ? `${API_URL}/api/roasts/me` : `${API_URL}/api/roasts`;
+      const response = await axios.get(endpoint);
       setRoasts(response.data);
     } catch (err) {
       console.error('Failed to fetch roasts:', err);
@@ -32,19 +33,16 @@ const Home = () => {
     }
   };
 
-  const handleRoast = async (url, language) => {
-    if (!user) {
-      setError("Please sign in to roast a URL.");
-      return;
-    }
-
-    setIsLoading(true);
+  const handleRoast = async (url, language) => {    setIsLoading(true);
     setError(null);
 
     try {
       const response = await axios.post(`${API_URL}/api/roast`, { url, language });
       
-      const newRoast = { ...response.data, user: { _id: user._id || user.id, name: user.name } };
+      const newRoast = { ...response.data };
+      if (user) {
+        newRoast.user = { _id: user._id || user.id, name: user.name };
+      }
       setLatestRoast(newRoast);
       setRoasts((prevRoasts) => [newRoast, ...prevRoasts]);
     } catch (err) {

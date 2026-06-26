@@ -144,7 +144,18 @@ router.post('/roast', async (req, res) => {
 
 router.get('/roasts', async (req, res) => {
   try {
-    const roasts = await Roast.find().populate('user', 'name').sort({ createdAt: -1 }).limit(20).lean();
+    const { search } = req.query;
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { url: { $regex: search, $options: 'i' } },
+          { title: { $regex: search, $options: 'i' } },
+          { summary: { $regex: search, $options: 'i' } }
+        ]
+      };
+    }
+    const roasts = await Roast.find(query).populate('user', 'name').sort({ createdAt: -1 }).limit(20).lean();
     res.json(roasts);
   } catch (error) {
     console.error('Error fetching roasts:', error);
@@ -154,7 +165,16 @@ router.get('/roasts', async (req, res) => {
 
 router.get('/roasts/me', auth, async (req, res) => {
   try {
-    const roasts = await Roast.find({ user: req.user._id }).sort({ createdAt: -1 }).lean();
+    const { search } = req.query;
+    let query = { user: req.user._id };
+    if (search) {
+      query.$or = [
+        { url: { $regex: search, $options: 'i' } },
+        { title: { $regex: search, $options: 'i' } },
+        { summary: { $regex: search, $options: 'i' } }
+      ];
+    }
+    const roasts = await Roast.find(query).sort({ createdAt: -1 }).lean();
     res.json(roasts);
   } catch (error) {
     console.error('Error fetching user roasts:', error);

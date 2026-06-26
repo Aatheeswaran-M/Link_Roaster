@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Flame, AlertCircle, Zap, Shield, Globe, Loader2 } from 'lucide-react';
+import { Flame, AlertCircle, Zap, Shield, Globe, Loader2, Search } from 'lucide-react';
 import RoastForm from '../components/RoastForm';
 import RoastCard from '../components/RoastCard';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -16,15 +16,20 @@ const Home = () => {
   const [deletingId, setDeletingId] = useState(null);
   const { API_URL, user } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchRoasts();
-  }, [user]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchRoasts = async () => {
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchRoasts(searchQuery);
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [user, searchQuery]);
+
+  const fetchRoasts = async (query = '') => {
     setIsFetchingInitial(true);
     try {
       const endpoint = user ? `${API_URL}/api/roasts/me` : `${API_URL}/api/roasts`;
-      const response = await axios.get(endpoint);
+      const response = await axios.get(endpoint, { params: { search: query } });
       setRoasts(response.data);
     } catch (err) {
       console.error('Failed to fetch roasts:', err);
@@ -186,6 +191,20 @@ const Home = () => {
                 </>
               )}
             </h2>
+            
+            {/* Search Bar */}
+            <div className="relative w-full md:w-64 mt-4 md:mt-0">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search roasts..."
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
           
           {isFetchingInitial ? (
